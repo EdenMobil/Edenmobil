@@ -7,14 +7,18 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-
-# This program requires LEGO EV3 MicroPython v2.0 or higher.
-# Click "Open user guide" on the EV3 extension tab for more information.
-
+from functions.linefollower import LineFollower
 
 # Create your objects here.
 ev3 = EV3Brick()
 
+color_sensor = ColorSensor(Port.S3)
+
+right_motor = Motor(Port.B)
+left_motor = Motor(Port.C)
+
+Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 
 # Write your program here.
-ev3.speaker.beep()
+Line = LineFollower(Drive, color_sensor)
+Line.follow()
