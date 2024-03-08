@@ -1,13 +1,15 @@
-from pybricks.parameters import Color
+from pybricks.parameters import Color, Direction
+from pybricks.media.ev3dev import ImageFile, Image
 
 class LineFollower:
-    def __init__(self, drivebase, color_sensor, ev3, imagefile):
+    def __init__(self, drivebase, color_sensor, ev3):
         self.drivebase = drivebase
         self.color_sensor = color_sensor
         self.ev3 = ev3 # for beeping and displaying
-        self.imagefile = imagefile
         self.running = False
-        self.searched_color = Color.YELLOW
+        self.turnstate = "RIGHT"
+        self.turned = 0
+        self.searched_color = Color.RED
 
 
     def follow(self):
@@ -17,31 +19,34 @@ class LineFollower:
             print(self.color_sensor.color())
             self.ev3.light.on(self.color_sensor.color())
             if self.color_sensor.color() == self.searched_color:
-                self.ev3.screen.draw_image(source=self.imagefile.FORWARD, y=20, x=20)
+                self.ev3.screen.load_image(ImageFile.FORWARD)
                 self.drivebase.straight(100)
             else:
-                # stopping
                 self.ev3.speaker.beep() 
                 self.search_line()
 
 
     def search_line(self):
         print("searching for line")
-        left, right = -20, 20
-        angle = left
-        while True:
-            self.drivebase.turn(angle)
-            if self.color_sensor.color() == self.searched_color:
-                print("found line")
-                break
-            if angle > 90:
-                self.ev3.screen.draw_image(source=self.imagefile.NO_GO, y=20, x=20)
-                break
-            if angle == right:
-                self.ev3.screen.draw_image(source=self.imagefile.RIGHT, y=20, x=20)
-                angle = left
-                right += 10 - left
-            elif angle == left:
-                self.ev3.screen.draw_image(source=self.imagefile.LEFT, y=20, x=20)
-                angle = right
-                left -= 10 + right
+        self.turned = 0
+        while self.color_sensor.color() != self.searched_color:
+            if self.turnstate == "RIGHT":
+                self.ev3.screen.load_image(ImageFile.RIGHT)
+                self.drivebase.turn(10)
+                self.turned += 10
+                if self.turned >= 90:
+                    self.ev3.screen.load_image(ImageFile.NO_GO)
+                    self.drivebase.turn(-90)
+                    self.turned = 0
+                    self.turnstate = "LEFT"
+            elif self.turnstate == "LEFT":
+                self.ev3.screen.load_image(ImageFile.LEFT)
+                self.drivebase.turn(-10)
+                self.turned += 10
+                if self.turned >= 90:
+                    self.ev3.screen.load_image(ImageFile.NO_GO)
+                    self.drivebase.turn(90)
+                    self.turned = 0
+                    self.turnstate = "RIGHT"
+        print("found line")
+        
