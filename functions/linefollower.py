@@ -20,7 +20,6 @@ class LineFollower:
                 # stopping
                 self.ev3.speaker.beep() 
                 self.search_line()
-                self.running = False
 
 
     def search_line(self):
@@ -28,5 +27,3 @@ class LineFollower:
         # searching methode here
         if self.color_sensor.color() == self.searched_color:
             print("found line")
-            self.running = True
-            
