@@ -20,10 +20,11 @@ left_motor = Motor(Port.C)
 
 Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 
+imagefile = ImageFile()
 # Write your program here.
 # Battery Info
 print(ev3.battery.voltage())
 print(ev3.battery.current())
 
-Line = LineFollower(Drive, color_sensor, ev3)
+Line = LineFollower(Drive, color_sensor, ev3, imagefile)
 Line.follow()
