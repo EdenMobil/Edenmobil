@@ -12,18 +12,27 @@ from functions.linefollower import LineFollower
 # Create your objects here.
 ev3 = EV3Brick()
 
-color_sensor = ColorSensor(Port.S3)
-ultrasonic_sensor = UltrasonicSensor(Port.S4)
+color_sensor = ColorSensor(Port.S3) # LineFollower only
+touch_sensor = TouchSensor(Port.S1) # StairClimber only
 
-right_motor = Motor(Port.B) 
-left_motor = Motor(Port.C)
-
+right_motor = Motor(Port.A) 
+left_motor = Motor(Port.D)
 Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 
-# Write your program here.
+# Needed for StairClimber else comment out
+lift_motor = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+rear_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
+
+# Configure Display
+big_font = Font(size=24)
+ev3.screen.set_font(big_font)
+
 # Battery Info
 print(ev3.battery.voltage())
 print(ev3.battery.current())
 
-Line = LineFollower(Drive, color_sensor, ev3)
-Line.follow()
+#Line = LineFollower(Drive, color_sensor, ev3)
+#Line.follow()
+climb = StairClimber(ev3, Drive, touch_sensor, lift_motor, rear_motor)
+steps = 10
+climb.climb(steps)
