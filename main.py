@@ -27,9 +27,15 @@ rear_motor = Motor(Port.C, Direction.COUNTERCLOCKWISE)
 big_font = Font(size=24)
 ev3.screen.set_font(big_font)
 
+# Configure Speaker
+ev3.speaker.set_speech_options(language='de',voice='m3',speed=None,pitch=50)
+
 # Battery Info
 print(ev3.battery.voltage())
 print(ev3.battery.current())
+
+ev3.speaker.beep()
+ev3.speaker.say('Edenmobil am Start')
 
 #Line = LineFollower(Drive, color_sensor, ev3)
 #Line.follow()

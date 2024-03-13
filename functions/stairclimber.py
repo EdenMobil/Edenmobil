@@ -26,11 +26,14 @@ class StairClimber:
         gyro_sensor.reset_angle(0)
         
     def climb(self, steps):
+        self.ev3.speaker.say("Klettern gestartet")
         self.steps = steps
         self.running = True
         self.ev3.screen.draw_text(70, 50, steps)
         self.drivebase.stop()
         while self.running and self.steps > 0:
+            self.ev3.speaker.say("Nächste Stuffe")
+            
             self.drivebase.straight(100)
             self.rear_motor.dc(90)
             wait(10)
